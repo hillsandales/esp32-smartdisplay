@@ -89,7 +89,7 @@ void adaptive_brightness(lv_timer_t *timer)
   smartdisplay_lcd_set_backlight(callback());
 }
 
-void smartdisplay_lcd_set_brightness_cb(smartdisplay_lcd_adaptive_brightness_cb_t cb, uint interval)
+void smartdisplay_lcd_set_brightness_cb(smartdisplay_lcd_adaptive_brightness_cb_t cb, uint32_t interval)
 {
   log_v("adaptive_brightness_cb:0x%08x, interval:%u", cb, interval);
 
@@ -182,14 +182,17 @@ void smartdisplay_init()
 #endif
 
   lv_init();
-  // Setup backlight
-  pinMode(GPIO_BCKL, OUTPUT);
-  digitalWrite(GPIO_BCKL, LOW);
-#if ESP_ARDUINO_VERSION_MAJOR >= 3
-  ledcAttach(GPIO_BCKL, PWM_FREQ_BCKL, PWM_BITS_BCKL);
-#else
-  ledcSetup(PWM_CHANNEL_BCKL, PWM_FREQ_BCKL, PWM_BITS_BCKL);
-  ledcAttachPin(GPIO_BCKL, PWM_CHANNEL_BCKL);
+
+#if GPIO_BCKL > 0
+    // Setup backlight
+    pinMode(GPIO_BCKL, OUTPUT);
+    digitalWrite(GPIO_BCKL, LOW);
+  #if ESP_ARDUINO_VERSION_MAJOR >= 3
+    ledcAttach(GPIO_BCKL, PWM_FREQ_BCKL, PWM_BITS_BCKL);
+  #else
+    ledcSetup(PWM_CHANNEL_BCKL, PWM_FREQ_BCKL, PWM_BITS_BCKL);
+    ledcAttachPin(GPIO_BCKL, PWM_CHANNEL_BCKL);
+  #endif
 #endif
   // Setup TFT display
   display = lvgl_lcd_init();
