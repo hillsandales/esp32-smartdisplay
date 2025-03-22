@@ -3,8 +3,8 @@ if(ESP_PLATFORM)
     get_filename_component(dir ${CMAKE_CURRENT_LIST_FILE} PATH)
     FILE(GLOB_RECURSE app_sources ${dir}/src/*.c*)
 
-    idf_component_register(SRCS ${app_sources}      
-                        INCLUDE_DIRS "src"
+    idf_component_register(SRCS "esp32_smartdisplay.c" #${app_sources}      
+                        INCLUDE_DIRS "include"
                         PRIV_REQUIRES arduino lvgl
 )
 else()
